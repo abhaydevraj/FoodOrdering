@@ -28,6 +28,10 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
     padding: 10,
+    flex: 1,
+    margin: 10,
+    borderRadius: 20,
+    maxWidth: "50%",
   },
   title: {
     fontSize: 20,
@@ -44,5 +48,6 @@ const styles = StyleSheet.create({
     width: "100%",
     aspectRatio: 1,
     marginBottom: 20,
+    resizeMode: "contain",
   },
 });
