@@ -1,35 +1,36 @@
-import { StyleSheet } from "react-native";
-
-import EditScreenInfo from "@/src/components/EditScreenInfo";
 import { Text, View } from "@/src/components/Themed";
+import { Image, StyleSheet } from "react-native";
+import products from "../../../assets/data/products";
 
 export default function TabOneScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
+      <Image source={{ uri: products[1].image }} style={styles.image} />
+      <Text style={styles.title}>{products[1].name}</Text>
+      <Text style={styles.price}>${products[1].price}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: "white",
+    padding: 10,
   },
   title: {
     fontSize: 20,
     fontWeight: "bold",
+    marginBottom: 20,
+    borderRadius: 20,
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
+
+  price: {
+    fontSize: 16,
+    color: "gray",
+  },
+  image: {
+    width: "100%",
+    aspectRatio: 1,
+    marginBottom: 20,
   },
 });
