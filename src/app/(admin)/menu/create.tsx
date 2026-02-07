@@ -2,6 +2,7 @@ import Button from "@/src/components/Button";
 import { defaultPizzaImage } from "@/src/components/ProductListItem";
 import Colors from "@/src/constants/Colors";
 import * as ImagePicker from "expo-image-picker";
+import { Stack, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
 import { Alert, Image, StyleSheet, Text, TextInput, View } from "react-native";
 
@@ -11,6 +12,8 @@ const CreateProductScreen = () => {
   const [error, setError] = useState("");
   const [image, setImage] = useState<string | null>(null);
 
+  const { id } = useLocalSearchParams();
+  const isUpdating = !!id;
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library.
     // Manually request permissions for videos on iOS when `allowsEditing` is set to `false`
@@ -60,6 +63,21 @@ const CreateProductScreen = () => {
     setPrice("");
   };
 
+  const onSubmit = () => {
+    if (isUpdating) {
+      onUpdateCreate();
+    } else {
+      onCreate();
+    }
+  };
+  const onUpdateCreate = () => {
+    if (!validateInput()) {
+      return;
+    }
+    alert(`Updating product: ${name}, Price: ${price}`);
+    // save in database logic here
+    resetFieds();
+  };
   const onCreate = () => {
     if (!validateInput()) {
       return;
@@ -68,8 +86,23 @@ const CreateProductScreen = () => {
     // save in database logic here
     resetFieds();
   };
+  const onDelete = () => {
+    console.warn("Deleting product...");
+    // delete from database logic here
+  };
+  const confirmDelete = () => {
+    Alert.alert("Confirm", "Are you sure you want to delete this product?", [
+      { text: "Cancel", style: "cancel" },
+      { text: "Delete", style: "destructive", onPress: onDelete },
+    ]);
+  };
   return (
     <View style={styles.container}>
+      <Stack.Screen
+        options={{
+          headerTitle: isUpdating ? "Update Product" : "Create Product",
+        }}
+      />
       <Image
         source={{ uri: image || defaultPizzaImage }}
         style={styles.image}
@@ -97,7 +130,20 @@ const CreateProductScreen = () => {
         onChangeText={setPrice}
       />
       <Text style={{ color: "red" }}>{error}</Text>
-      <Button text="Create Product" onPress={onCreate} />
+      <Button
+        text={isUpdating ? "Update Product" : "Create Product"}
+        onPress={onSubmit}
+      />
+      {isUpdating && (
+        <Text
+          style={styles.textButton}
+          onPress={() => {
+            confirmDelete();
+          }}
+        >
+          Delete Product
+        </Text>
+      )}
     </View>
   );
 };
