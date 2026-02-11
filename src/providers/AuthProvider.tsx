@@ -1,11 +1,11 @@
 import { supabase } from "@/src/lib/supabase";
 import { Session } from "@supabase/auth-js/dist/module/lib/types";
 import {
-    createContext,
-    PropsWithChildren,
-    useContext,
-    useEffect,
-    useState,
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useState,
 } from "react";
 
 type Profile = {
@@ -59,7 +59,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
     console.log("AuthProvider mounted");
   }, []);
 
-  console.log("AuthProvider render", { session, loading });
+  // console.log("AuthProvider render", { session, loading });
 
   return (
     <AuthContext.Provider

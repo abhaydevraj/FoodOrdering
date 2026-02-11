@@ -1,4 +1,5 @@
-import products from "@/assets/data/products";
+import { useProduct } from "@/src/api/products";
+import { defaultPizzaImage } from "@/src/components/ProductListItem";
 import Colors from "@/src/constants/Colors";
 import { useCart } from "@/src/providers/CartProvider";
 import { PizzaSize } from "@/src/types";
@@ -8,11 +9,13 @@ import React, { useState } from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 const productDetailsScreen = () => {
-  const { id } = useLocalSearchParams();
+  const { id: idString } = useLocalSearchParams();
+  const id = parseFloat(typeof idString === "string" ? idString : idString[0]);
+
+  const { data: product, error, isLoading } = useProduct(id);
   const { AddItem } = useCart();
   const router = useRouter();
 
-  const product = products.find((p) => p.id.toString() === id);
   const [selectedSize, setSelectedSize] = useState<PizzaSize>("M");
 
   const addToCart = () => {
@@ -23,6 +26,12 @@ const productDetailsScreen = () => {
 
   if (!product) {
     return <Text>Product not found</Text>;
+  }
+  if (isLoading) {
+    return <Text>Loading...</Text>;
+  }
+  if (error) {
+    throw new Error(error.message);
   }
 
   return (
@@ -48,7 +57,10 @@ const productDetailsScreen = () => {
       />
 
       <Stack.Screen options={{ headerTitle: product.name }} />
-      <Image source={{ uri: product.image }} style={styles.image} />
+      <Image
+        source={{ uri: product.image || defaultPizzaImage }}
+        style={styles.image}
+      />
       <Text style={styles.price}>${product.name}</Text>
       <Text style={styles.price}>${product.price}</Text>
     </View>

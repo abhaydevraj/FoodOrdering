@@ -1,9 +1,14 @@
+import {
+  useInsertProduct,
+  useProduct,
+  useUpdateProduct,
+} from "@/src/api/products";
 import Button from "@/src/components/Button";
 import { defaultPizzaImage } from "@/src/components/ProductListItem";
 import Colors from "@/src/constants/Colors";
 import * as ImagePicker from "expo-image-picker";
-import { Stack, useLocalSearchParams } from "expo-router";
-import React, { useState } from "react";
+import { router, Stack, useLocalSearchParams } from "expo-router";
+import React, { useEffect, useState } from "react";
 import { Alert, Image, StyleSheet, Text, TextInput, View } from "react-native";
 
 const CreateProductScreen = () => {
@@ -13,8 +18,10 @@ const CreateProductScreen = () => {
   const [image, setImage] = useState<string | null>(null);
 
   const { id } = useLocalSearchParams();
+  console.log("Received id from params:", id);
   const isUpdating = !!id;
-  const pickImage = async () => {
+
+  async function pickImage() {
     // No permissions request is necessary for launching the image library.
     // Manually request permissions for videos on iOS when `allowsEditing` is set to `false`
     // and `videoExportPreset` is `'Passthrough'` (the default), ideally before launching the picker
@@ -38,12 +45,11 @@ const CreateProductScreen = () => {
       quality: 1,
     });
 
-    console.log(result);
-
+    // console.log(result);
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
-  };
+  }
 
   const validateInput = () => {
     setError("");
@@ -58,9 +64,24 @@ const CreateProductScreen = () => {
     return true;
   };
 
-  const resetFieds = () => {
+  const { mutate: insertProduct } = useInsertProduct();
+  const { mutate: updateProduct } = useUpdateProduct();
+  const { data: updatingProduct } = useProduct(Number(id));
+
+  console.log("Updating product:", updatingProduct?.name);
+  useEffect(() => {
+    if (updatingProduct) {
+      setName(updatingProduct.name);
+      setPrice(updatingProduct.price.toString());
+      setImage(updatingProduct.image);
+    }
+  }, [updatingProduct]);
+
+  const resetFields = () => {
     setName("");
     setPrice("");
+    // setImage(null);
+    // setError("");
   };
 
   const onSubmit = () => {
@@ -70,21 +91,37 @@ const CreateProductScreen = () => {
       onCreate();
     }
   };
-  const onUpdateCreate = () => {
+  const onUpdateCreate = async () => {
     if (!validateInput()) {
       return;
     }
-    alert(`Updating product: ${name}, Price: ${price}`);
-    // save in database logic here
-    resetFieds();
+
+    // save in database update logic here
+    updateProduct(
+      { id, name, price: parseFloat(price), image },
+      {
+        onSuccess() {
+          resetFields();
+          router.back();
+        },
+      },
+    );
   };
   const onCreate = () => {
     if (!validateInput()) {
       return;
     }
-    alert(`Creating new product: ${name}, Price: ${price}`);
-    // save in database logic here
-    resetFieds();
+
+    // save in database create logic here
+    insertProduct(
+      { name, price: parseFloat(price), image },
+      {
+        onSuccess: () => {
+          resetFields();
+          router.back();
+        },
+      },
+    );
   };
   const onDelete = () => {
     console.warn("Deleting product...");

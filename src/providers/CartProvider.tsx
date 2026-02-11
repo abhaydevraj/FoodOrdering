@@ -43,7 +43,7 @@ const CartProvider = ({ children }: PropsWithChildren) => {
       quantity: 1,
     };
     setItems((prevItems) => [...prevItems, newCartItem]); // some changed from video
-    console.log("Adding item to cart:", items, newCartItem.id);
+    // console.log("Adding item to cart:", items, newCartItem.id);
   };
   // update quantity
   const updateQuantity = (itemId: string, amount: -1 | 1) => {
