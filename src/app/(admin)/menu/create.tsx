@@ -17,9 +17,13 @@ const CreateProductScreen = () => {
   const [error, setError] = useState("");
   const [image, setImage] = useState<string | null>(null);
 
-  const { id } = useLocalSearchParams();
+  const { id: idString } = useLocalSearchParams();
+  const id = parseFloat(
+    typeof idString === "string" ? idString : idString?.[0],
+  );
+
   console.log("Received id from params:", id);
-  const isUpdating = !!id;
+  const isUpdating = !!idString;
 
   async function pickImage() {
     // No permissions request is necessary for launching the image library.

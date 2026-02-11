@@ -84,10 +84,10 @@ export const useUpdateProduct = () => {
       }
       return newProduct;
     },
-    async onSuccess(_, { data }) {
+    async onSuccess(_, { id }) {
       // Invalidate and refetch
       await queryClient.invalidateQueries({ queryKey: ["products"] });
-      await queryClient.invalidateQueries({ queryKey: ["products", data.id] });
+      await queryClient.invalidateQueries({ queryKey: ["products", id] });
     },
     onError(error) {
       console.error("Error updating product:", error);
