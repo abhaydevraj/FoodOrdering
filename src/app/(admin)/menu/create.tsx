@@ -1,4 +1,5 @@
 import {
+  useDeleteProduct,
   useInsertProduct,
   useProduct,
   useUpdateProduct,
@@ -71,6 +72,7 @@ const CreateProductScreen = () => {
   const { mutate: insertProduct } = useInsertProduct();
   const { mutate: updateProduct } = useUpdateProduct();
   const { data: updatingProduct } = useProduct(Number(id));
+  const { mutate: deleteProduct } = useDeleteProduct();
 
   console.log("Updating product:", updatingProduct?.name);
   useEffect(() => {
@@ -130,6 +132,12 @@ const CreateProductScreen = () => {
   const onDelete = () => {
     console.warn("Deleting product...");
     // delete from database logic here
+    deleteProduct(id, {
+      onSuccess() {
+        resetFields();
+        router.replace("/(admin)");
+      },
+    });
   };
   const confirmDelete = () => {
     Alert.alert("Confirm", "Are you sure you want to delete this product?", [

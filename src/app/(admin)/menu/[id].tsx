@@ -31,7 +31,11 @@ const productDetailsScreen = () => {
     return <Text>Loading...</Text>;
   }
   if (error) {
-    throw new Error(error.message);
+    return (
+      <Text>
+        Error: {error instanceof Error ? error.message : "Unknown error"}
+      </Text>
+    );
   }
 
   return (

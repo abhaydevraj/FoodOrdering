@@ -27,7 +27,7 @@ export const useProduct = (id: number) => {
         .single();
 
       if (error) {
-        throw new Error(error.message);
+        throw new Error(error.message || JSON.stringify(error));
       }
       return data;
     },
@@ -91,6 +91,18 @@ export const useUpdateProduct = () => {
     },
     onError(error) {
       console.error("Error updating product:", error);
+    },
+  });
+};
+
+export const useDeleteProduct = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    async mutationFn(id: number) {
+      await supabase.from("products").delete().eq("id", id);
+    },
+    async onSuccess() {
+      await queryClient.invalidateQueries({ queryKey: ["products"] });
     },
   });
 };
