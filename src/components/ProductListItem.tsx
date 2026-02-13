@@ -1,5 +1,5 @@
 import { Text } from "@/src/components/Themed";
-import { Product } from "@/src/types";
+import { Tables } from "@/src/types";
 import { Link, useSegments } from "expo-router";
 import { Image, Pressable, StyleSheet } from "react-native";
 
@@ -7,7 +7,7 @@ export const defaultPizzaImage =
   "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/food/default.png";
 
 type ProductListItemProps = {
-  product: Product;
+  product: Tables<"products">;
 };
 const ProductListItem = ({ product }: ProductListItemProps) => {
   const segments = useSegments();
