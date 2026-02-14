@@ -1,9 +1,25 @@
-import orders from "@/assets/data/orders";
+import { useAdminOrdersList } from "@/src/api/orders";
 import OrderListItem from "@/src/components/OrderListItem";
 import React from "react";
-import { FlatList } from "react-native";
+import { FlatList, Text } from "react-native";
 
 export default function OrderScreen() {
+  const {
+    data: orders,
+    error,
+    isLoading,
+  } = useAdminOrdersList({ archived: false });
+
+  if (isLoading) {
+    return <Text>Loading...</Text>;
+  }
+  if (error) {
+    return (
+      <Text>
+        Error: {error instanceof Error ? error.message : "Unknown error"}
+      </Text>
+    );
+  }
   return (
     <FlatList
       data={orders}

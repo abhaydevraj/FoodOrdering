@@ -35,7 +35,7 @@ export type Order = {
   id: number;
   created_at: string;
   total: number;
-  user_id: string;
+  user_id: string | null;
   status: OrderStatus;
 
   order_items?: OrderItem[];
