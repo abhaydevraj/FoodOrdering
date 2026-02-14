@@ -6,7 +6,7 @@ import React from "react";
 import { FlatList, Platform, Text, View } from "react-native";
 
 const CartScreen = () => {
-  const { items, total } = useCart();
+  const { items, total, checkout } = useCart();
   return (
     <View>
       <FlatList
@@ -17,7 +17,7 @@ const CartScreen = () => {
       <Text style={{ margin: 10, fontSize: 20, fontWeight: "bold" }}>
         Total: ${total.toFixed(2)}
       </Text>
-      <Button text="Checkout" onPress={() => console.log("Checkout pressed")} />
+      <Button text="Checkout" onPress={checkout} />
 
       {/* Use a light status bar on iOS to account for the black space above the modal */}
       <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
