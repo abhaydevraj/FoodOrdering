@@ -1,12 +1,13 @@
 import { useProduct } from "@/src/api/products";
 import { defaultPizzaImage } from "@/src/components/ProductListItem";
+import RemoteImage from "@/src/components/RemoteImage";
 import Colors from "@/src/constants/Colors";
 import { useCart } from "@/src/providers/CartProvider";
 import { PizzaSize } from "@/src/types";
 import { FontAwesome } from "@expo/vector-icons";
 import { Link, Stack, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 const productDetailsScreen = () => {
   const { id: idString } = useLocalSearchParams();
@@ -61,8 +62,9 @@ const productDetailsScreen = () => {
       />
 
       <Stack.Screen options={{ headerTitle: product.name }} />
-      <Image
-        source={{ uri: product.image || defaultPizzaImage }}
+      <RemoteImage
+        path={product.image}
+        fallback={defaultPizzaImage}
         style={styles.image}
       />
       <Text style={styles.price}>${product.name}</Text>
