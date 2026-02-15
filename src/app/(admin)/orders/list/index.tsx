@@ -1,4 +1,5 @@
 import { useAdminOrdersList } from "@/src/api/orders";
+import { useInsertOrderSubscription } from "@/src/api/orders/subscriptions";
 import OrderListItem from "@/src/components/OrderListItem";
 import React from "react";
 import { FlatList, Text } from "react-native";
@@ -9,6 +10,8 @@ export default function OrderScreen() {
     error,
     isLoading,
   } = useAdminOrdersList({ archived: false });
+
+  useInsertOrderSubscription();
 
   if (isLoading) {
     return <Text>Loading...</Text>;

@@ -1,4 +1,4 @@
-import { useOrderDetails } from "@/src/api/orders";
+import { useOrderDetails, useUpdateorder } from "@/src/api/orders";
 import OrderItemListItem from "@/src/components/OrderItemListItem";
 import OrderListItem from "@/src/components/OrderListItem";
 import Colors from "@/src/constants/Colors";
@@ -11,7 +11,11 @@ export default function OrderDetailScreen() {
   const id = parseFloat(typeof idString === "string" ? idString : idString[0]);
 
   const { data: order, error, isLoading } = useOrderDetails(id);
+  const { mutate: updateOrder } = useUpdateorder();
   // const order = orders.find((order) => order.id === Number(id));
+  const updateStatus = (status: string) => {
+    updateOrder({ id: id, updatedFields: { status } });
+  };
   if (isLoading) {
     return <Text>Loading...</Text>;
   }
@@ -42,7 +46,7 @@ export default function OrderDetailScreen() {
               {OrderStatusList.map((status) => (
                 <Pressable
                   key={status}
-                  onPress={() => console.warn("Update status")}
+                  onPress={() => updateStatus(status)}
                   style={{
                     borderColor: Colors.light.tint,
                     borderWidth: 1,
