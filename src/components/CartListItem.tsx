@@ -1,9 +1,10 @@
 import { useCart } from "@/src/providers/CartProvider";
 import { FontAwesome } from "@expo/vector-icons";
 import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import Colors from "../constants/Colors";
 import { CartItem } from "../types";
+import RemoteImage from "./RemoteImage";
 
 const defaultPizzaImage = "https://via.placeholder.com/300?text=Pizza";
 
@@ -15,10 +16,10 @@ const CartListItem = ({ cartItem }: CartListItemProps) => {
   const { updateQuantity } = useCart();
   return (
     <View style={styles.container}>
-      <Image
-        source={{ uri: cartItem.product.image || defaultPizzaImage }}
+      <RemoteImage
+        path={cartItem.product.image}
+        fallback={defaultPizzaImage}
         style={styles.image}
-        resizeMode="contain"
       />
       <View style={{ flex: 1 }}>
         <Text style={styles.title}>{cartItem.product.name}</Text>

@@ -79,7 +79,6 @@ const CreateProductScreen = () => {
   const { data: updatingProduct } = useProduct(Number(id));
   const { mutate: deleteProduct } = useDeleteProduct();
 
-  console.log("Updating product:", updatingProduct?.name);
   useEffect(() => {
     if (updatingProduct) {
       setName(updatingProduct.name);
@@ -106,10 +105,10 @@ const CreateProductScreen = () => {
     if (!validateInput()) {
       return;
     }
-
+    const imagePath = await uploadImage();
     // save in database update logic here
     updateProduct(
-      { id, name, price: parseFloat(price), image },
+      { id, name, price: parseFloat(price), image: imagePath },
       {
         onSuccess() {
           resetFields();
