@@ -1,29 +1,49 @@
-import products from "@/assets/data/products";
+import { useProduct } from "@/src/api/products";
 import Button from "@/src/components/Button";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { defaultPizzaImage } from "@/src/components/ProductListItem";
+import RemoteImage from "@/src/components/RemoteImage";
+import { useCart } from "@/src/providers/CartProvider";
+import { PizzaSize } from "@/src/types";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
-const sizes = ["S", "M", "L", "XL"];
-
-const addToCart = () => {
-  alert("Added to cart");
-};
+const sizes: PizzaSize[] = ["S", "M", "L", "XL"];
 
 const productDetailsScreen = () => {
-  const { id } = useLocalSearchParams();
-  const product = products.find((p) => p.id.toString() === id);
-  const [selectedSize, setSelectedSize] = useState(sizes[0]);
+  const { id: idString } = useLocalSearchParams();
+  const id = parseFloat(typeof idString === "string" ? idString : idString[0]);
+
+  const { data: product, error, isLoading } = useProduct(id);
+  const { AddItem } = useCart();
+  const router = useRouter();
+
+  const [selectedSize, setSelectedSize] = useState<PizzaSize>("M");
+
+  const addToCart = () => {
+    if (!product) return;
+    AddItem(product, selectedSize);
+    router.push("/cart");
+  };
 
   if (!product) {
     return <Text>Product not found</Text>;
   }
-
+  if (isLoading) {
+    return <Text>Loading...</Text>;
+  }
+  if (error) {
+    throw new Error(error.message);
+  }
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ headerTitle: product.name }} />
 
-      <Image source={{ uri: product.image }} style={styles.image} />
+      <RemoteImage
+        path={product.image}
+        fallback={defaultPizzaImage}
+        style={styles.image}
+      />
       <Text>Select size</Text>
 
       <View style={styles.sizesContainer}>
