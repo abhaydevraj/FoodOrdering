@@ -33,8 +33,10 @@ const WebStorageAdapter = {
   },
 };
 
-const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL || "";
-const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON || "";
+const supabaseUrl = "https://ermmfvglepinclnvpqht.supabase.co";
+const supabaseAnonKey =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVybW1mdmdsZXBpbmNsbnZwcWh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0NjgwNTYsImV4cCI6MjA4NjA0NDA1Nn0.eYUrUI1qPzDLyp_OZwIc4NS2ZkGnl-3WLV_GChI8o4Q";
+
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   auth: {
     storage: (Platform.OS === "web"
